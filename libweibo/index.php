@@ -7,7 +7,7 @@ include_once( 'saetv2.ex.class.php' );
 $o = new SaeTOAuthV2( WB_AKEY , WB_SKEY );
 
 $code_url = $o->getAuthorizeURL( WB_CALLBACK_URL );
-
+//https://api.weibo.com/oauth2/authorize?client_id=2232997713&redirect_uri=http%3A%2F%2F1.bintest.sinaapp.com%2Flibweibo%2Fcallback.php&response_type=code
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
