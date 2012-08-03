@@ -1,0 +1,1 @@
+https//api.twitter.com/1/account/rate_limit_status.json&oauth_consumer_key=cW6YJ48wm3owinobuO4Mg&oauth_nonce=94bc17c27a6f8b04d78c0b169ba8985c&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1343980608&oauth_token=134037251-UOhccCHaJP2QZyOy36GziBWssJIIaVcaOA2AkBbA&oauth_version=1.0
