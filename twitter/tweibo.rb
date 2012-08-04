@@ -7,32 +7,34 @@
 require 'socksify/http'
 require "awesome_print"
 require 'digest/hmac'
+require 'base64'
+require 'openssl'
 HOST = 'localhost'
 PORT = 7070
 KEY = 'cW6YJ48wm3owinobuO4Mg';
 SECRET = 'jtmBvZB7ZsrQuyalBlOLmk3PL2092CPaa7lODITY';
 TOKEN = '134037251-UOhccCHaJP2QZyOy36GziBWssJIIaVcaOA2AkBbA'
 TOKEN_SECRET = 'MvAQyp08LjIXZYWaGJZRMy6pQyvLOztvA7kC151XNSQ'
-oauth_nonce = '';
+oauth_nonce = Base64.encode64(OpenSSL::Random.random_bytes(32)).gsub(/\W/, '')[0, 32]
+#ap oauth_nonce
 oauth_signature = '';
 oauth_signature_method = 'HMAC-SHA1';
 oauth_timestamp = Time.now.to_i.to_s
 oauth_version   = '1.0';
 api_host = 'api.twitter.com';
 http_protocol = 'http';
-uri = URI.parse(api_host)
+uri = URI.parse(http_protocol+'://'+api_host)
 Net::HTTP.SOCKSProxy(HOST, PORT).start(uri.host, uri.port) do |http|
+    #puts http.get(api_host)
+    #exit
     http_method = 'get'.upcase;
-    api_method = '/1/account/rate_limit_status.json';
+    #api_method = '/1/account/rate_limit_status.json';
+    #api_method = '/1/statuses/home_timeline.json';
+    #api_method = '/1/statuses/mentions.json';
+    api_method = '/1/account/totals.json';
     base_url = http_protocol+'://'+api_host+api_method;
     status = '';
     include_entities = '';
-    herders = {
-        'Authorization'=>'OAuth oauth_consumer_key="#{KEY}", oauth_nonce="#{oauth_nonce}", 
-                          oauth_signature="#{oauth_signature}", oauth_signature_method="#{oauth_signature_method}", 
-                          oauth_timestamp="#{oauth_timestamp}",oauth_token="#{TOKEN}", oauth_version="#{oauth_version}"',
-        'Host'=> api_host
-    }
     params = {
         'oauth_consumer_key'=>KEY,
         'oauth_nonce'=>oauth_nonce,
@@ -47,5 +49,13 @@ Net::HTTP.SOCKSProxy(HOST, PORT).start(uri.host, uri.port) do |http|
 
     oauth_signature = Digest::HMAC.hexdigest(signature_base_string, signing_key, Digest::SHA1)
     ap oauth_signature;
-    #puts http.get(api_method, herders).body;
+
+    herders = {
+        'Authorization'=>'OAuth oauth_consumer_key="'+KEY+'", oauth_nonce="'+oauth_nonce+'",
+                          oauth_signature="'+oauth_signature+'", oauth_signature_method="'+oauth_signature_method+'", 
+                          oauth_timestamp="'+oauth_timestamp+'",oauth_token="'+TOKEN+'", oauth_version="'+oauth_version+'"',
+        'Host'=> api_host
+    }
+    ap herders
+    puts http.get(api_method, herders).body;
 end
